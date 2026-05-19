@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cart — AFTERHRS</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="js-enhancements.css" />
+    <link rel="stylesheet" href="vinyl-player.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet" />
+    <style>
+        body { font-family: 'Montserrat', sans-serif; }
+        .page-header-title, .nav-logo, .footer-brand h3 { font-family: 'Cormorant Garamond', serif; }
+
+        .cart-layout { display: grid; grid-template-columns: 1fr 320px; gap: 40px; padding: 60px; align-items: flex-start; }
+
+        .cart-section-label { font-size: 10px; letter-spacing: 4px; color: var(--accent-gold); text-transform: uppercase; margin-bottom: 24px; }
+
+        .cart-item-row { display: grid; grid-template-columns: 80px 1fr auto; gap: 20px; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--border-color); }
+        .cart-item-img { width: 80px; height: 80px; object-fit: cover; border: 1px solid var(--border-color); background: #1a1a1a; display: block; }
+        .cart-item-name { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-white); margin-bottom: 4px; }
+        .cart-item-meta { font-size: 10px; color: var(--text-muted); letter-spacing: 1px; margin-bottom: 8px; }
+        .cart-item-unit { font-size: 12px; color: var(--accent-gold); letter-spacing: 1px; }
+
+        .qty-controls { display: flex; align-items: center; margin-top: 10px; }
+        .qty-btn { width: 28px; height: 28px; background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); font-size: 14px; cursor: pointer; transition: border-color 0.2s, color 0.2s; font-family: inherit; line-height: 1; }
+        .qty-btn:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
+        .qty-num { width: 36px; text-align: center; font-size: 12px; color: var(--text-white); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); height: 28px; line-height: 28px; background: transparent; }
+
+        .cart-item-right { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+        .cart-item-total { font-size: 14px; color: var(--text-white); letter-spacing: 1px; }
+        .cart-remove-btn { background: none; border: none; color: var(--text-muted); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: color 0.2s; font-family: inherit; }
+        .cart-remove-btn:hover { color: #e74c3c; }
+
+        .cart-empty { text-align: center; padding: 80px 20px; }
+        .cart-empty p { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 28px; }
+
+        .cart-summary { background: #141414; border: 1px solid var(--border-color); padding: 28px; position: sticky; top: 100px; }
+        .summary-title { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--accent-gold); margin-bottom: 24px; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 14px; }
+        .summary-row span:first-child { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); }
+        .summary-row span:last-child { font-size: 13px; color: var(--text-white); }
+        .summary-divider { border: none; border-top: 1px solid var(--border-color); margin: 18px 0; }
+        .summary-total-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 24px; }
+        .summary-total-row span:first-child { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-white); }
+        .summary-total-row span:last-child { font-size: 22px; color: var(--accent-gold); font-family: 'Cormorant Garamond', serif; }
+
+        .checkout-btn { display: block; width: 100%; padding: 14px; background: transparent; border: 1px solid var(--accent-gold); color: var(--accent-gold); font-size: 11px; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; font-family: inherit; transition: background 0.25s, color 0.25s; text-align: center; text-decoration: none; }
+        .checkout-btn:hover { background: var(--accent-gold); color: #000; }
+        .checkout-btn.disabled { opacity: 0.4; pointer-events: none; }
+        .continue-link { display: block; text-align: center; margin-top: 14px; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); transition: color 0.2s; }
+        .continue-link:hover { color: var(--accent-gold); }
+
+        .promo-wrap { display: flex; margin-bottom: 18px; }
+        .promo-input { flex: 1; padding: 10px 12px; background: transparent; border: 1px solid var(--border-color); color: var(--text-white); font-size: 11px; font-family: inherit; outline: none; transition: border-color 0.2s; }
+        .promo-input:focus { border-color: var(--accent-gold); }
+        .promo-apply { padding: 10px 14px; background: transparent; border: 1px solid var(--border-color); border-left: none; color: var(--text-muted); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; font-family: inherit; transition: color 0.2s, border-color 0.2s; }
+        .promo-apply:hover { color: var(--accent-gold); border-color: var(--accent-gold); }
+
+        @media (max-width: 900px) { .cart-layout { grid-template-columns: 1fr; padding: 40px 30px; } .cart-summary { position: static; } }
+    </style>
+</head>
+<body>
+
+    <nav class="nav-bar">
+        <a href="index.html" class="nav-logo">Afterhrs</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="shop.html">Shop</a></li>
+            <li><a href="collections.html">Collections</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="auth.html">Login</a></li>
+        </ul>
+    </nav>
+
+    <div class="page-header">
+        <h1 class="page-header-title">Your Cart</h1>
+        <p class="page-header-sub">Review Before Checkout</p>
+    </div>
+
+    <div class="cart-layout">
+
+        <div>
+            <p class="cart-section-label">Items</p>
+            <div id="cart-items-list"></div>
+        </div>
+
+        <div class="cart-summary">
+            <p class="summary-title">Order Summary</p>
+            <div class="summary-row"><span>Subtotal</span><span id="s-sub">₹0</span></div>
+            <div class="summary-row"><span>Shipping</span><span id="s-ship">Free</span></div>
+            <div class="promo-wrap">
+                <input type="text" class="promo-input" id="promo-code" placeholder="Promo code">
+                <button class="promo-apply" onclick="applyPromo()">Apply</button>
+            </div>
+            <hr class="summary-divider">
+            <div class="summary-total-row">
+                <span>Total</span>
+                <span id="s-total">₹0</span>
+            </div>
+            <a href="checkout.html" class="checkout-btn" id="checkout-link">Proceed to Checkout</a>
+            <a href="shop.html" class="continue-link">← Continue Shopping</a>
+        </div>
+
+    </div>
+
+    <footer class="footer">
+        <div class="footer-brand"><h3>Afterhrs</h3><p>Curated After Dark. Clothing for those who live beyond daylight.</p></div>
+        <div class="footer-links"><h4>Navigate</h4><ul><li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li><li><a href="collections.html">Collections</a></li></ul></div>
+        <div class="footer-links"><h4>Support</h4><ul><li><a href="contact.html">Contact</a></li><li><a href="#">Returns</a></li></ul></div>
+    </footer>
+    <div class="footer-bottom">
+        <p>© 2026 AFTERHRS. All rights reserved.</p>
+        <p>Curated After Dark</p>
+    </div>
+
+    <script src="cart.js"></script>
+    <script src="auth.js"></script>
+    <script src="vinyl-player.js"></script>
+    <script src="size-chart.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", renderCartPage);
+
+    function renderCartPage() {
+        var cart = getCart();
+        var list = document.getElementById("cart-items-list");
+
+        if (cart.length === 0) {
+            list.innerHTML = '<div class="cart-empty"><p>Your cart is empty</p><a href="shop.html" class="hero-btn">Browse Products</a></div>';
+            document.getElementById("checkout-link").classList.add("disabled");
+            updateSummary([]);
+            return;
+        }
+
+        list.innerHTML = cart.map(function (item, i) {
+            var unitPrice = parseInt(item.price.replace(/[^\d]/g, ""), 10);
+            var lineTotal = unitPrice * item.qty;
+            var imgEl = item.image
+                ? '<img src="' + item.image + '" alt="' + item.name + '" class="cart-item-img">'
+                : '<div class="cart-item-img" style="display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);">IMG</div>';
+            return '<div class="cart-item-row">' + imgEl +
+                '<div>' +
+                    '<p class="cart-item-name">' + item.name + '</p>' +
+                    '<p class="cart-item-meta">' + (item.category || "") + ' &middot; Size ' + (item.size || "OS") + '</p>' +
+                    '<p class="cart-item-unit">' + item.price + ' each</p>' +
+                    '<div class="qty-controls">' +
+                        '<button class="qty-btn" onclick="changeQty(' + i + ',-1)">&#8722;</button>' +
+                        '<div class="qty-num">' + item.qty + '</div>' +
+                        '<button class="qty-btn" onclick="changeQty(' + i + ',1)">+</button>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="cart-item-right">' +
+                    '<p class="cart-item-total">&#8377;' + lineTotal.toLocaleString("en-IN") + '</p>' +
+                    '<button class="cart-remove-btn" onclick="removeItem(' + i + ')">Remove</button>' +
+                '</div></div>';
+        }).join("");
+
+        updateSummary(cart);
+    }
+
+    function changeQty(i, delta) {
+        var cart = getCart();
+        if (!cart[i]) return;
+        cart[i].qty += delta;
+        if (cart[i].qty < 1) cart.splice(i, 1);
+        saveCart(cart);
+        updateCartBadge();
+        renderCartPage();
+    }
+
+    function removeItem(i) {
+        removeFromCart(i);
+        renderCartPage();
+    }
+
+    function updateSummary(cart) {
+        cart = cart || getCart();
+        var sub = 0;
+        cart.forEach(function (item) {
+            sub += parseInt(item.price.replace(/[^\d]/g, ""), 10) * item.qty;
+        });
+        var shipCost  = sub > 0 && sub < 2999 ? 149 : 0;
+        var shipLabel = shipCost === 0 ? "Free" : "&#8377;149";
+        document.getElementById("s-sub").textContent  = "&#8377;" + sub.toLocaleString("en-IN");
+        document.getElementById("s-ship").innerHTML   = shipLabel;
+        document.getElementById("s-total").innerHTML  = "&#8377;" + (sub + shipCost).toLocaleString("en-IN");
+    }
+
+    function applyPromo() {
+        var code = document.getElementById("promo-code").value.trim().toUpperCase();
+        showCartToast(code === "AFTERHRS10" ? "10% off applied!" : "Invalid promo code");
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact — AFTERHRS</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="js-enhancements.css" />
+    <link rel="stylesheet" href="vinyl-player.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet" />
+    <style>
+        body { font-family: 'Montserrat', sans-serif; }
+        .hero-title, .section-heading, .page-header-title, .nav-logo, .footer-brand h3 {
+            font-family: 'Cormorant Garamond', serif;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="nav-bar">
+        <a href="index.html" class="nav-logo">Afterhrs</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="shop.html">Shop</a></li>
+            <li><a href="collections.html">Collections</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html" class="active">Contact</a></li>
+            <li><a href="auth.html">Login</a></li>
+        </ul>
+    </nav>
+
+    <div class="page-header">
+        <h1 class="page-header-title">Contact</h1>
+        <p class="page-header-sub">We'd Love To Hear From You</p>
+    </div>
+
+    <section class="section-wrapper">
+        <div class="contact-grid">
+
+            <div class="contact-info">
+                <p class="section-title">Get In Touch</p>
+                <h2>Let's Talk</h2>
+                <p>
+                    Have a question about sizing? A collaboration idea?
+                    Or just want to say something? We read every message
+                    and respond within 48 hours.
+                </p>
+                <div class="contact-detail">
+                    <span>Email</span>
+                    <p>hello@afterhrs.com</p>
+                </div>
+                <div class="contact-detail">
+                    <span>Instagram</span>
+                    <p>@afterhrs24</p>
+                </div>
+                <div class="contact-detail">
+                    <span>Location</span>
+                    <p>Chitkara University<br>Rajpura, Punjab</p>
+                </div>
+                <div class="contact-detail">
+                    <span>Response Time</span>
+                    <p>Within 48 hours</p>
+                </div>
+            </div>
+
+            <form class="contact-form" id="contact-form">
+                <div class="form-group">
+                    <label for="contact-name">Your Name</label>
+                    <input type="text" id="contact-name" name="name" placeholder="Your full name" required />
+                </div>
+                <div class="form-group">
+                    <label for="contact-email">Email Address</label>
+                    <input type="email" id="contact-email" name="email" placeholder="you@email.com" required />
+                </div>
+                <div class="form-group">
+                    <label for="contact-subject">Subject</label>
+                    <select id="contact-subject" name="subject">
+                        <option>General Inquiry</option>
+                        <option>Order Issue</option>
+                        <option>Size Help</option>
+                        <option>Collaboration</option>
+                        <option>Returns &amp; Refunds</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="contact-message">Message</label>
+                    <textarea id="contact-message" name="message" placeholder="Write your message here..."></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-brand">
+            <h3>Afterhrs</h3>
+            <p>Curated After Dark.<br>Clothing for those who live beyond daylight.</p>
+        </div>
+        <div class="footer-links">
+            <h4>Navigate</h4>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="collections.html">Collections</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h4>Support</h4>
+            <ul>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="#" class="size-guide-link">Size Guide</a></li>
+                <li><a href="#">Returns</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h4>Follow</h4>
+            <ul>
+                <li><a href="https://www.instagram.com/" target="_blank">Instagram</a></li>
+                <li><a href="https://www.pinterest.com/" target="_blank">Pinterest</a></li>
+            </ul>
+        </div>
+    </footer>
+    <div class="footer-bottom">
+        <p>© 2026 AFTERHRS. All rights reserved.</p>
+        <p>Curated After Dark</p>
+    </div>
+
+    <script src="cart.js"></script>
+    <script src="auth.js"></script>
+    <script src="vinyl-player.js"></script>
+    <script src="size-chart.js"></script>
+    <script>
+    document.getElementById("contact-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var message = {
+            name:      document.getElementById("contact-name").value,
+            email:     document.getElementById("contact-email").value,
+            subject:   document.getElementById("contact-subject").value,
+            message:   document.getElementById("contact-message").value,
+            timestamp: new Date().toLocaleString()
+        };
+        var messages = JSON.parse(localStorage.getItem("afterhrs_messages") || "[]");
+        messages.push(message);
+        localStorage.setItem("afterhrs_messages", JSON.stringify(messages));
+
+        var btn = this.querySelector(".submit-btn");
+        btn.textContent = "✓ Message Sent";
+        btn.style.background  = "var(--accent-gold)";
+        btn.style.color       = "#000";
+        btn.style.borderColor = "var(--accent-gold)";
+        setTimeout(function () {
+            document.getElementById("contact-form").reset();
+            btn.textContent = "Send Message";
+            btn.style.background  = "";
+            btn.style.color       = "";
+            btn.style.borderColor = "";
+        }, 2500);
+    });
+    </script>
+</body>
+</html>
